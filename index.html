@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>MyWebAR Free Demo</title>
-    <!-- A-Frame এবং AR.js লোড -->
+    <meta charset="utf-8">
+    <title>WebXR Surface Tracking Demo</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.2.1/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   </head>
   <body style="margin:0; overflow:hidden;">
-    <!-- AR Scene -->
-    <a-scene embedded arjs>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      embedded
+      renderer="logarithmicDepthBuffer: true;"
+      xr-mode-ui="enabled: true"
+      webxr="optionalFeatures: hit-test;">
       
-      <!-- Marker (hiro ডিফল্ট) -->
-      <a-marker preset="hiro">
-        <!-- আপনার Google Drive থেকে 3D মডেল -->
-        <a-entity gltf-model="https://drive.google.com/uc?export=download&id=1urWo5Os3tEhnvmN20oe5o6xmf6Fqk_YK" 
-                  scale="0.5 0.5 0.5" 
-                  position="0 0 0">
-        </a-entity>
-      </a-marker>
+      <!-- 3D Model from Google Drive -->
+      <a-entity id="model"
+        gltf-model="https://drive.google.com/uc?export=download&id=1urWo5Os3tEhnvmN20oe5o6xmf6Fqk_YK"
+        scale="0.5 0.5 0.5"
+        visible="false">
+      </a-entity>
       
-      <!-- ক্যামেরা -->
-      <a-entity camera></a-entity>
+      <a-camera></a-camera>
     </a-scene>
+
+    <script>
+      // Surface tracking logic
+      const sceneEl = document.querySelector('a-scene');
+      sceneEl.addEventListener('enter-vr', () => {
+        if (sceneEl.xrSession) {
+          const model = document.getElementById('model');
+          model.setAttribute('visible', 'true');
+          // মডেলকে মেঝেতে বসানোর জন্য hit-test ব্যবহার করা হবে
+        }
+      });
+    </script>
   </body>
 </html>
